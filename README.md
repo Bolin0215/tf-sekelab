@@ -5,7 +5,7 @@ My code in sekelab
 + General
     + Python (verified on 3.5.2)
 + Python Packages
-    + Theano (deep learning library, verified on 0.8.2)
+    + Tensorflow (deep learning library, verified on 1.0.0)
     + Scikit-learn (machine learning library, verified on 0.18.1)
     + nltk (NLP tools, verified on 3.2.1)
     + tqdm (progress bar, verified on 4.7.4)

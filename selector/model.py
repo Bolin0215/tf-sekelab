@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.contrib.rnn import BasicLSTMCell, DropoutWrapper
-from tf.nn import bidirectional_dynamic_rnn, linear_logits
+from tf.nn import bidirectional_dynamic_rnn, linear_logits, dynamic_rnn
 from tf.cell import AttentionCell
 
 class Model:
@@ -62,17 +62,15 @@ class Model:
 
         with tf.name_scope('Attention'), tf.variable_scope('attention'):
             att_cell_q = AttentionCell(cell, Hq, mask=self.q_mask, input_keep_prob=self.dropoutRate)
-            (fw_p, bw_p), _ = bidirectional_dynamic_rnn(att_cell_q, att_cell_q, Hp, p_len, dtype='float', scope='p2q')
-            Hr_p = tf.concat([fw_p, bw_p], 3)
+            Hr_p, _ = dynamic_rnn(att_cell_q, Hp, p_len, dtype='float', scope='p2q')
             att_cell_p = AttentionCell(cell, Hp, mask=self.p_mask, input_keep_prob=self.dropoutRate)
-            (fw_q, bw_q), _ = bidirectional_dynamic_rnn(att_cell_p, att_cell_p, Hq, q_len, dtype='float', scope='q2p')
-            Hr_q = tf.concat([fw_q, bw_q], 3)
+            Hr_q, _ = dynamic_rnn(att_cell_p, Hq, q_len, dtype='float', scope='q2p')
 
         with tf.name_scope('Aggregation'), tf.variable_scope('aggregate'):
-            (fw_p, bw_p), _ = bidirectional_dynamic_rnn(d_cell, d_cell, Hr_p, p_len, dtype='float', scope='agg_p')
-            Agg_p = tf.concat([fw_p[:,:,-1], bw_p[:,:,-1]], 2)
-            (fw_q, bw_q), _ = bidirectional_dynamic_rnn(d_cell, d_cell, Hr_q, q_len, dtype='float', scope='agg_q')
-            Agg_q = tf.concat([fw_q[:,:,-1], bw_q[:,:,-1]], 2)
+            fw_p, _ = dynamic_rnn(d_cell, Hr_p, p_len, dtype='float', scope='agg_p')
+            Agg_p = fw_p[:,:,-1]
+            fw_q, _ = dynamic_rnn(d_cell, Hr_q, q_len, dtype='float', scope='agg_q')
+            Agg_q = fw_q[:,:,-1]
             Agg = tf.concat([Agg_p, Agg_q], 2)
 
         with tf.variable_scope('out'):

@@ -95,8 +95,6 @@ def prepro_each_select(args, data_type, out_name='default', num=1):
                 yi0, yi1 = get_word_span(context, sents, ans_start, ans_stop)
                 y = [yi0, yi1]
                 cnt += 1
-                if cnt == 10:
-                    ret = True
                 if yi0[0] != yi1[0]:
                     wrongcnt += 1
                     continue

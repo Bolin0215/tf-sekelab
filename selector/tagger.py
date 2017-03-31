@@ -23,18 +23,17 @@ class Tagger:
         dir = os.path.join('.','data','squad')
         parser.add_argument('--emb_dir', default=dir,help="embedding vectors directory")
         parser.add_argument('--data_dir', default=dir,help='data directory')
-        parser.add_argument('--lrate', type=float, default=0.002, help='learning rate')
+        parser.add_argument('--lrate', type=float, default=0.02, help='learning rate')
         parser.add_argument('--embeddingSize', type=int, default=100)
         parser.add_argument('--windowSize', type=int, default=3)
         parser.add_argument('--dropoutRate', type=float, default=1.0)
         parser.add_argument('--batchSize', type=int, default=2)
         parser.add_argument('--hiddenSize', type=int, default=50)
-        parser.add_argument('--epochs', type=int, default=1)
+        parser.add_argument('--epochs', type=int, default=30)
         parser.add_argument('--mode', default='train', help='train/test')
         parser.add_argument('--load', type=bool, default=False, help='load params at test mode')
         parser.add_argument('--load_path', default=None, help='load path')
         parser.add_argument('--preTrainEmbed', type=bool, default=True)
-        parser.add_argument('--optimizer', default='adamax')
         parser.add_argument('--device', type=str, default='/cpu:0')
         parser.add_argument('--share_lstm_weights', type=bool, default=False)
         parser.add_argument('--saveAtt', default=False, type=bool)
@@ -61,7 +60,7 @@ class Tagger:
             self.out_dir = os.path.join(self.args.out_dir,
                                         str(self.args.batchSize) + '_' + str(self.args.embeddingSize) + '_' + \
                                         str(self.args.hiddenSize) + '_' + str(
-                                            self.args.dropoutRate) + '_' + self.args.optimizer + '_' + \
+                                            self.args.dropoutRate) + '_' + \
                                         str(self.args.lrate))
             if not os.path.isdir(self.out_dir):
                 os.mkdir(self.out_dir)
