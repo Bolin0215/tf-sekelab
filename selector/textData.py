@@ -123,7 +123,13 @@ class textData:
 
     def read_all_data(self):
         self.train_data = self._read_data('train')
+        if len(self.train_data) // self.args.batchSize != 0:
+            left = len(self.train_data) // self.args.batchSize
+            self.train_data.extend(self.train_data[:left])
         self.val_data = self._read_data('dev')
+        if len(self.val_data) // self.args.batchSize != 0:
+            left = len(self.val_data) // self.args.batchSize
+            self.val_data.extend(self.val_data[:left])
 
     def gen_Batches(self, data_type):
         batches_sample = []
